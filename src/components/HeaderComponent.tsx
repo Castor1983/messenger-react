@@ -4,19 +4,14 @@ import {NavLink} from "react-router-dom";
 const HeaderComponent = () => {
     return (
         <div>
-            <NavLink to={'/'}>home page</NavLink>
+            <NavLink to={'register'}>register</NavLink>
             <br/>
-            <NavLink to={'users'}>users page</NavLink>
+            <NavLink to={'login'}>login</NavLink>
             <br/>
-            <NavLink to={'posts'}>posts page</NavLink>
+            <NavLink to={'posts'}>logout</NavLink>
             <br/>
-            <NavLink to={'todos'}>todos page</NavLink>
+            <NavLink to={'chat'}>chat</NavLink>
             <br/>
-            <NavLink to={'albums'}>albums page</NavLink>
-            <br/>
-            <NavLink to={'photos'}>photos page</NavLink>
-            <br/>
-            <NavLink to={'comments'}>comments page</NavLink>
             <hr/>
         </div>
     );
