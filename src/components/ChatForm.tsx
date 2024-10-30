@@ -37,7 +37,7 @@ const ChatForm: React.FC = () => {
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
                 reset();
             } catch (error) {
-                console.error("Не вдалося відправити повідомлення:", error);
+                console.error("Failed to send message:", error);
             }
         }
     };
