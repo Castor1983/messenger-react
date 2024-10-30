@@ -1,61 +1,88 @@
 import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { requestServices } from '../services/api.service';
+import { jwtDecode } from 'jwt-decode';
+import { ITokenPayload } from '../types/tokenType';
+import {ChatFormInputs, IMessage } from '../types/messageType';
 
-interface Message {
-    text: string;
-    sender: 'user' | 'bot';
-}
-
-interface ChatFormInputs {
-    message: string;
-}
 
 const ChatForm: React.FC = () => {
+    const [messages, setMessages] = useState<IMessage[]>([]);
     const { register, handleSubmit, reset } = useForm<ChatFormInputs>();
-    const [messages, setMessages] = useState<Message[]>([]);
 
-    const onSubmit: SubmitHandler<ChatFormInputs> = ({ message }) => {
 
-        const newMessage: Message = { text: message, sender: 'user' };
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-        
-        const botReply: Message = {
-            text: `You say: ${message}`,
-            sender: 'bot',
-        };
-        setMessages((prevMessages) => [...prevMessages, botReply]);
+    const onSubmit: SubmitHandler<ChatFormInputs> = async (data ) => {
+        const token = sessionStorage.getItem('token');
 
-        reset();
+        if (token) {
+            const formData = new FormData();
+            const payload: ITokenPayload   = jwtDecode(token);
+            formData.append("senderId", payload.userId)
+            formData.append("receiverId", data.receiverId);
+            formData.append("message", data.message);
+            Array.from(data.files).forEach((file) => {
+                formData.append("files", file);
+            });
+
+            try {
+                requestServices.chatService.sendMassage(formData)
+
+                const newMessage: IMessage = {
+                    senderId: payload.userId,
+                    receiverId: data.receiverId,
+                    message: data.message,
+                    files: Array.from(data.files),
+                };
+
+                setMessages((prevMessages) => [...prevMessages, newMessage]);
+                reset();
+            } catch (error) {
+                console.error("Не вдалося відправити повідомлення:", error);
+            }
+        }
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', maxWidth: '400px', margin: 'auto' }}>
-            <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px', height: '300px', overflowY: 'auto' }}>
+        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <h1>Chat</h1>
+
+            <div style={{ border: '1px solid #ccc', padding: '10px', height: '300px', overflowY: 'scroll', marginBottom: '20px' }}>
                 {messages.map((msg, index) => (
-                    <div
-                        key={index}
-                        style={{
-                            textAlign: msg.sender === 'user' ? 'right' : 'left',
-                            margin: '5px 0',
-                            color: msg.sender === 'user' ? '#007bff' : '#28a745',
-                        }}
-                    >
-                        <strong>{msg.sender === 'user' ? 'You' : 'Bot'}:</strong> {msg.text}
+                    <div   key={index} style={{
+                        textAlign: msg.senderId === 'user' ? 'right' : 'left',
+                        margin: '5px 0',
+                        color: msg.senderId === 'user' ? '#007bff' : '#28a745',
+                    }}>
+                        <strong>{msg.senderId} → {msg.receiverId}:</strong>
+                        <p>{msg.message}</p>
+                        {msg.files.length > 0 && (
+                            <div>
+                                <strong>Attached files:</strong>
+                                <ul>
+                                    {msg.files.map((file, index) => (
+                                        <li key={index}>{file.name}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex' }}>
-                <input
-                    {...register('message', { required: true })}
-                    placeholder="Enter a message"
-                    style={{ flex: 1, padding: '8px', marginRight: '5px', borderRadius: '4px', border: '1px solid #ccc' }}
-                />
-                <button type="submit" style={{ padding: '8px 12px', borderRadius: '4px', backgroundColor: '#007bff', color: '#fff', border: 'none' }}>
-                    Send message
-                </button>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <label htmlFor="recipient">Receiver:</label>
+                <input id="receiverId" {...register("receiverId", { required: "Вкажіть отримувача" })} />
+
+                <label htmlFor="message">Message:</label>
+                <textarea id="message" {...register("message", { required: "Введіть повідомлення" })}></textarea>
+
+                <label htmlFor="files">Add files:</label>
+                <input id="files" type="file" {...register("files")} multiple />
+
+                <button type="submit">Send</button>
             </form>
         </div>
     );
 };
+
 export {ChatForm};

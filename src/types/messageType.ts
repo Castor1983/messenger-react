@@ -1,26 +1,32 @@
 import { ParamsDictionary } from 'express-serve-static-core';
 
-export interface IMessage<T> {
+export interface IMessage {
     senderId: string,
     receiverId: string,
     message: string,
-    files?:  T[]
+    files: File[]
 
 
 }
-export type TextMessage = IMessage<string>;
-export type FormDataMessage = IMessage<FormData>;
+export interface IMessageFormData {
+    senderId: FormData,
+    receiverId: FormData,
+    message: FormData,
+    files?: FormData
 
+
+}
 export interface IUpdateMessage  {
     message: string,
-    files?: string []
+    files?: File []
 }
 export interface IMessageParams extends ParamsDictionary {
     chatId: string,
     messageId: string
-
+    
 }
-export interface IChatMessages {
-    messages: TextMessage[]
-
+export interface ChatFormInputs {
+    receiverId: string;
+    message: string;
+    files:FileList;
 }

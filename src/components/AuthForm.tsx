@@ -17,7 +17,6 @@ const AuthForm: React.FC = () => {
                 await requestServices.authService.register(data as IUserRegister)
                 reset()
             } else {
-                console.log(data)
                 const token = await requestServices.authService.login (data as IUserCredentials);
                 reset()
                 sessionStorage.setItem('token', token.accessToken);
@@ -33,14 +32,14 @@ const AuthForm: React.FC = () => {
     };
 
     return (
-        <div style={{ maxWidth: '400px', margin: '0 auto', border: 'solid' }}>
-            <h2 style={{ textAlign: 'center', color: '#007bff' }}>{isRegister ? 'Register' : 'Login'}</h2>
+        <div style={{ maxWidth: '400px', margin: '40px auto', border: '1px solid #282c34', borderRadius: '4px', backgroundColor: '#61dafb' }}>
+            <h2 style={{ textAlign: 'center', color: '#282c34' }}>{isRegister ? 'Register' : 'Login'}</h2>
             <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', maxWidth: '300px', margin: 'auto' }}>
                 {isRegister && (
                     <div>
                         <label style={{
                             margin: '5px 0',
-                            color: '#007bff',
+                            color: '#282c34',
                         }}>Nickname</label>
                         <input style={{ padding: '8px', marginBottom: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
                             type="text"
@@ -58,7 +57,7 @@ const AuthForm: React.FC = () => {
                 <div>
                     <label style={{
                         margin: '5px 0',
-                        color: '#007bff',
+                        color: '#282c34',
                     }}>Phone</label>
                     <input style={{ padding: '8px', marginBottom: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
                         type="text"
@@ -74,7 +73,7 @@ const AuthForm: React.FC = () => {
                 <div>
                     <label style={{
                         margin: '5px 0',
-                        color: '#007bff',
+                        color: '#282c34',
                     }}>Password</label>
                     <input style={{ padding: '8px', marginBottom: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
                         type="password"
@@ -89,9 +88,9 @@ const AuthForm: React.FC = () => {
                     />
                     {errors.password && <p>{errors.password.message}</p>}
                 </div>
-                <button  style={{ padding: '10px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }} type="submit">{isRegister ? 'Register' : 'Login'}</button>
+                <button  style={{ padding: '10px', backgroundColor: '#282c34', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }} type="submit">{isRegister ? 'Register' : 'Login'}</button>
             </form>
-            <button  style={{ padding: '10px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }} onClick={() => setIsRegister(!isRegister)}>
+            <button  style={{ padding: '10px', backgroundColor: '#282c34', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }} onClick={() => setIsRegister(!isRegister)}>
                 {isRegister ? 'I already have an account' : 'Register'}
             </button>
         </div>
