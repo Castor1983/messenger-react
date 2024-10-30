@@ -1,9 +1,10 @@
 import React from 'react';
+import { ChatForm } from '../components/ChatForm';
 
 const ChatPage = () => {
     return (
         <div>
-            ChatPage
+            <ChatForm/>
         </div>
     );
 };

@@ -2,8 +2,7 @@ import {createBrowserRouter, Navigate, RouteObject} from "react-router-dom";
 import {appRoutes} from "./appRoutes";
 import {MainLayout} from "../layouts/MainLayout";
 import {HomePage} from "../pages/HomePage";
-import {RegisterPage} from "../pages/RegisterPage";
-import {LoginPage} from "../pages/LoginPage";
+import {AuthPage} from "../pages/AuthPage";
 import {ChatPage} from "../pages/ChatPage";
 
 const routes: RouteObject[] = [{
@@ -15,18 +14,14 @@ const routes: RouteObject[] = [{
             element: <HomePage/>
         },
         {
-            path: appRoutes.REGISTER,
-            element: <RegisterPage/>
+            path: appRoutes.AUTH,
+            element: <AuthPage/>
         },
-        {
-            path: appRoutes.LOGIN,
-            element: <LoginPage/>, children: [
                 {
                     path: appRoutes.CHAT,
                     element: <ChatPage/>
                 }
-            ]
-        }
+        
     ]
 
 }]

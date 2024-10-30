@@ -1,7 +1,7 @@
 import React from 'react';
 import { AuthForm } from '../components/AuthForm';
 
-const RegisterPage = () => {
+const AuthPage = () => {
     return (
         <div>
             <AuthForm/>
@@ -9,4 +9,4 @@ const RegisterPage = () => {
     );
 };
 
-export {RegisterPage};
+export {AuthPage};

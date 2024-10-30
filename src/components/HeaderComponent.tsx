@@ -4,11 +4,11 @@ import {NavLink} from "react-router-dom";
 const HeaderComponent = () => {
     return (
         <div>
-            <NavLink to={'register'}>register</NavLink>
+            <NavLink to={'auth'}>register</NavLink>
             <br/>
-            <NavLink to={'login'}>login</NavLink>
+            <NavLink to={'auth'}>login</NavLink>
             <br/>
-            <NavLink to={'posts'}>logout</NavLink>
+            <NavLink to={'auth'}>logout</NavLink>
             <br/>
             <NavLink to={'chat'}>chat</NavLink>
             <br/>
