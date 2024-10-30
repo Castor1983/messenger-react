@@ -25,7 +25,7 @@ const ChatForm: React.FC = () => {
             });
 
             try {
-                requestServices.chatService.sendMassage(formData)
+               await requestServices.chatService.sendMassage(formData)
 
                 const newMessage: IMessage = {
                     senderId: payload.userId,
