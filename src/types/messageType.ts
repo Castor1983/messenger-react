@@ -8,6 +8,15 @@ export interface IMessage {
 
 
 }
+export interface IMessageResponse {
+    messageId: string,
+    senderId: string,
+    receiverId: string,
+    message: string,
+    files: File[]
+
+
+}
 export interface IMessageFormData {
     senderId: FormData,
     receiverId: FormData,
@@ -23,7 +32,7 @@ export interface IUpdateMessage  {
 export interface IMessageParams extends ParamsDictionary {
     chatId: string,
     messageId: string
-    
+
 }
 export interface ChatFormInputs {
     receiverId: string;
