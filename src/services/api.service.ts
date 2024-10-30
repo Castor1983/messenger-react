@@ -1,34 +1,34 @@
 import axios, {AxiosInstance, AxiosResponse } from "axios";
+
 import { baseUrl, urls } from "../constants/urls";
-import {IUser, IUserCredentials} from "../types/userType";
+import {IUserCredentials, IUserRegister} from "../types/userType";
 import {IMessage} from "../types/messageType";
+import { IToken } from "../types/tokenType";
 
  export const axiosInstance: AxiosInstance = axios.create({
     baseURL: baseUrl,
-    headers: {
-        accept: 'application/json',
-        Authorization: `Bearer token`
-    },
+     headers: {'Content-type': 'application/json'}
 })
 
 export const requestServices = {
     authService:{
-        register: async (dto: IUser):Promise<IResponseMoviesListModel>=> {
-            const response: AxiosResponse<IResponseMoviesListModel> = await axiosInstance.post<IResponseMoviesListModel>(urls.auth.register)
-            return response.data
+        register: async (data: IUserRegister):Promise<void>=> {
+             await axiosInstance.post<void>(urls.auth.register, data)
+            
         },
-        login: async (dto: IUserCredentials):Promise<IMovieCardModel>=> {
-            const response: AxiosResponse<IMovieCardModel> = await  axiosInstance.post<IMovieCardModel>(urls.auth.login)
+        login: async (data: IUserCredentials):Promise<IToken>=> {
+            const response = await  axiosInstance.post<IToken>(urls.auth.login, data)
             return response.data
 
+
         },
-        logout: async ():Promise<IResponseMoviesListModel>=> {
-            const response: AxiosResponse<IResponseMoviesListModel> = await axiosInstance.delete<IResponseMoviesListModel>(urls.auth.logout, {params: {with_genres: `${genreId}`, page: `${page}`}})
-            return response.data
+        logout: async ():Promise<void>=> {
+            const response: AxiosResponse<void> = await axiosInstance.delete<void>(urls.auth.logout)
+
         },
 
     },
-    chatService:{
+    /*chatService:{
         sendMassage: async (dto: IMessage<FormData>):Promise<IResponseGenresListModel>=> {
             const response: AxiosResponse<IResponseGenresListModel> = await axiosInstance.post<IResponseGenresListModel>(urls.chat.sendMassage, {params: {language: 'en'}})
             return response.data
@@ -45,6 +45,6 @@ export const requestServices = {
             const response: AxiosResponse<IResponseGenresListModel> = await axiosInstance.get<IResponseGenresListModel>(urls.chat.getMessagesByChatId, {chatId})
             return response.data
 },
-
+*/
     }
-}
+
