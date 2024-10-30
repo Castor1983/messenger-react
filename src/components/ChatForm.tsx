@@ -23,9 +23,11 @@ const ChatForm: React.FC = () => {
             Array.from(data.files).forEach((file) => {
                 formData.append("files", file);
             });
+            const chatId: string = [payload.userId, data.receiverId].sort().join('_');
 
             try {
                await requestServices.chatService.sendMassage(formData)
+               const response = await requestServices.chatService.getMessagesByChatId(chatId)
 
                 const newMessage: IMessage = {
                     senderId: payload.userId,
@@ -34,7 +36,7 @@ const ChatForm: React.FC = () => {
                     files: Array.from(data.files),
                 };
 
-                setMessages((prevMessages) => [...prevMessages, newMessage]);
+                setMessages(response)
                 reset();
             } catch (error) {
                 console.error("Failed to send message:", error);

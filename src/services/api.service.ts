@@ -36,6 +36,13 @@ export const requestServices = {
                 },})
             return response.data
         },
+        getMessagesByChatId: async (chatId: string): Promise<IMessage[]> => {
+            const token = sessionStorage.getItem("token");
+            const response: AxiosResponse<IMessage[]> = await axiosInstance.get<IMessage[]>(`${urls.chat.getMessagesByChatId}/${chatId}`, {  headers: {
+                    Authorization: `Bearer ${token}`,
+                },})
+            return response.data
+        },
         /*editMassage: async (messageId: string, chatId: string): Promise<IResponseGenresListModel> => {
             const response: AxiosResponse<IResponseGenresListModel> = await axiosInstance.put<IResponseGenresListModel>(urls.chat.editMassage, {messageId})
             return response.data
@@ -44,10 +51,7 @@ export const requestServices = {
             const response: AxiosResponse<IResponseGenresListModel> = await axiosInstance.delete<IResponseGenresListModel>(urls.chat.deleteMassage, {messageId})
             return response.data
         },
-        getMessagesByChatId: async (chatId: string): Promise<IResponseGenresListModel> => {
-            const response: AxiosResponse<IResponseGenresListModel> = await axiosInstance.get<IResponseGenresListModel>(urls.chat.getMessagesByChatId, {chatId})
-            return response.data
-        },*/
+        */
 
 }
 }
