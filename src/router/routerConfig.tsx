@@ -8,11 +8,8 @@ import {ChatPage} from "../pages/ChatPage";
 const routes: RouteObject[] = [{
     path: appRoutes.MAIN, element: <MainLayout/>, children: [
 
-        {index: true, element: <Navigate to={appRoutes.MAIN}/>},
-        {
-            path: appRoutes.HOME,
-            element: <HomePage/>
-        },
+        {index: true, element: <Navigate to={appRoutes.AUTH}/>},
+
         {
             path: appRoutes.AUTH,
             element: <AuthPage/>
@@ -21,7 +18,7 @@ const routes: RouteObject[] = [{
                     path: appRoutes.CHAT,
                     element: <ChatPage/>
                 }
-        
+
     ]
 
 }]

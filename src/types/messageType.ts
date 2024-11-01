@@ -8,15 +8,21 @@ export interface IMessage {
 
 
 }
+export type createType = {
+    seconds: number,
+    nanoseconds: number
+}
 export interface IMessageResponse {
     messageId: string,
     senderId: string,
     receiverId: string,
     message: string,
-    files: File[]
+    create: createType,
+    files: string[]
 
 
 }
+
 export interface IMessageFormData {
     senderId: FormData,
     receiverId: FormData,
@@ -26,8 +32,8 @@ export interface IMessageFormData {
 
 }
 export interface IUpdateMessage  {
+    receiverId: string
     message: string,
-    files?: File []
 }
 export interface IMessageParams extends ParamsDictionary {
     chatId: string,
@@ -39,3 +45,4 @@ export interface ChatFormInputs {
     message: string;
     files:FileList;
 }
+

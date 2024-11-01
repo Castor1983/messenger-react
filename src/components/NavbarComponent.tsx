@@ -6,11 +6,10 @@ const NavbarComponent = () => {
             <div className="navbar-container">
                 <h1 className="navbar-logo">Chat-messenger</h1>
                 <ul className="navbar-menu">
-                    <li className="navbar-item"><a href="home">Home</a></li>
                     <li className="navbar-item"><a href="auth">Register/login</a></li>
                     <li className="navbar-item"><a href="chat">Chat</a></li>
                 </ul>
-            </div>  
+            </div>
         </nav>
     );
 };
