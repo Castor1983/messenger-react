@@ -1,6 +1,17 @@
 import React from 'react';
+import { requestServices } from '../services/api.service';
 import './Navbar.css';
+import { Navigate } from 'react-router-dom';
+import { appRoutes } from '../router/appRoutes';
 const NavbarComponent = () => {
+    const logout = async () => {
+        const token = sessionStorage.getItem('token')
+        if(token) {
+            await requestServices.authService.logout(token);
+            sessionStorage.clear()
+        } else{return <Navigate to={appRoutes.AUTH} />}
+       
+    }
     return (
         <nav className="navbar">
             <div className="navbar-container">
@@ -8,6 +19,7 @@ const NavbarComponent = () => {
                 <ul className="navbar-menu">
                     <li className="navbar-item"><a href="auth">Register/login</a></li>
                     <li className="navbar-item"><a href="chat">Chat</a></li>
+                    <li className="navbar-item" onClick={()=> logout()}><a>Logout</a></li>
                 </ul>
             </div>
         </nav>

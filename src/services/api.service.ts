@@ -24,8 +24,11 @@ export const requestServices = {
 
         },
 
-        logout: async (): Promise<void> => {
-             await axiosInstance.delete<void>(urls.auth.logout)
+        logout: async (token: string): Promise<void> => {
+             await axiosInstance.delete<void>(urls.auth.logout, { headers: {
+                Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+            },})
 
         },
 
