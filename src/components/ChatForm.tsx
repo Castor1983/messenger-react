@@ -66,7 +66,6 @@ const ChatForm: React.FC = () => {
 
     const handleUpdateMessage: SubmitHandler<ChatFormInputs> = async (data) => {
         const { files, ...dataWithoutFiles } = data;
-       console.log(dataWithoutFiles)
         const chatId: string = [payload.userId, data.receiverId].sort().join('_');
         await requestServices.chatService.editMassage(dataWithoutFiles, isEditing as string, chatId)
         const response = await requestServices.chatService.getMessagesByChatId(chatId)
