@@ -1,10 +1,10 @@
 import React from 'react';
-import { ChatForm } from '../components/ChatForm';
+import { ChatFormComponent } from '../components/ChatFormComponent';
 
 const ChatPage = () => {
     return (
         <div>
-            <ChatForm/>
+            <ChatFormComponent/>
         </div>
     );
 };

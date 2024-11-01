@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
+import React, {useEffect, useRef, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { requestServices } from '../services/api.service';
 import { jwtDecode } from 'jwt-decode';
 import { ITokenPayload } from '../types/tokenType';
+import {LoaderComponent} from './LoaderComponent'
 import {ChatFormInputs, IMessageResponse, IUpdateMessage, createType } from '../types/messageType';
 import { Navigate } from 'react-router-dom';
 import { appRoutes } from '../router/appRoutes';
 
 
-const ChatForm: React.FC = () => {
+const ChatFormComponent: React.FC = () => {
     const [messages, setMessages] = useState<IMessageResponse[]>([]);
     const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { register, handleSubmit, reset, setValue } = useForm<ChatFormInputs>();
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
 
     const token = sessionStorage.getItem('token');
     const payload: ITokenPayload = token ? jwtDecode(token) : { userId: '' };
@@ -23,6 +30,7 @@ const ChatForm: React.FC = () => {
 }
 
     const onSubmit: SubmitHandler<ChatFormInputs> = async (data ) => {
+        setIsLoading(true);
         const formData = new FormData();
         if (token) {
             formData.append("senderId", payload.userId)
@@ -44,9 +52,12 @@ const ChatForm: React.FC = () => {
                 });
                 setMessages(sortedMessages)
 
-                reset();
+                reset({message: '',
+                files: new DataTransfer().files});
             } catch (error) {
                 console.error("Failed to send message:", error);
+            } finally {
+                setIsLoading(false);
             }
 
     };
@@ -66,6 +77,7 @@ const ChatForm: React.FC = () => {
     };
 
     const handleUpdateMessage: SubmitHandler<ChatFormInputs> = async (data) => {
+        setIsLoading(true);
         const { files, ...dataWithoutFiles } = data;
         const chatId: string = [payload.userId, data.receiverId].sort().join('_');
         await requestServices.chatService.editMassage(dataWithoutFiles, isEditing as string, chatId)
@@ -73,72 +85,80 @@ const ChatForm: React.FC = () => {
         setMessages(response)
         reset();
         setIsEditing(null);
+        setIsLoading(false);
     };
 
     const handleDeleteMessage = async (messageId: string, receiverId: string, senderId: string) => {
+        setIsLoading(true);
         const chatId: string = [senderId, receiverId].sort().join('_');
 
         await requestServices.chatService.deleteMassage(messageId, chatId)
         const response = await requestServices.chatService.getMessagesByChatId(chatId)
         setMessages(response)
+        setIsLoading(false);
     };
 
     return (
 <>
         {token? (<div style={{maxWidth: '900px', margin: '0 auto'}}>
             <h1>Chat</h1>
+            {isLoading ? (
+                <LoaderComponent/>
+            ) : (
+                <div style={{
+                    border: '1px solid #ccc',
+                    padding: '10px',
+                    height: '300px',
+                    overflowY: 'scroll',
+                    marginBottom: '20px'
+                }}>
+                    {messages.map((msg) => (
+                        <div key={msg.messageId} onClick={() => handleClickMessage(msg.messageId)} style={{
+                            textAlign: msg.senderId === payload.userId ? 'right' : 'left',
+                            margin: '5px 0',
+                            color: msg.senderId === payload.userId ? '#007bff' : '#28a745',
+                        }}>
+                            <strong>{msg.senderId}:</strong>
+                            <p>{msg.message}</p>
+                            <p>{toDate(msg.create)}</p>
 
-            <div style={{
-                border: '1px solid #ccc',
-                padding: '10px',
-                height: '300px',
-                overflowY: 'scroll',
-                marginBottom: '20px'
-            }}>
-                {messages.map((msg) => (
-                    <div key={msg.messageId} onClick={() => handleClickMessage(msg.messageId)} style={{
-                        textAlign: msg.senderId === payload.userId ? 'right' : 'left',
-                        margin: '5px 0',
-                        color: msg.senderId === payload.userId ? '#007bff' : '#28a745',
-                    }}>
-                        <strong>{msg.senderId}:</strong>
-                        <p>{msg.message}</p>
-                        <p>{toDate(msg.create)}</p>
-
-                        {msg.senderId === payload.userId && selectedMessageId === msg.messageId && (
-                            <div>
-                                <button
-                                    onClick={() => handleEditMessage(msg.messageId, msg.receiverId, msg.senderId)}>
-                                    Edit
-                                </button>
-                                <button
-                                    onClick={() => handleDeleteMessage(msg.messageId, msg.receiverId, msg.senderId)}
-                                    style={{marginLeft: '10px'}}>
-                                    Delete
-                                </button>
-                            </div>
-                        )}
-
-                        {msg.files.length > 0 && (
-                            <div>
-                                <strong>Attached files:</strong>
-                                <ul>
-                                    {msg.files.map((fileUrl, index) => {
-
-                                        return (
-                                            <li key={index}>
-                                                <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-                                                    { `File ${index + 1}`}
-                                                </a>
-                                            </li>
-                                        );
-                                    })}
-                            </ul>
-                            </div>
+                            {msg.senderId === payload.userId && selectedMessageId === msg.messageId && (
+                                <div>
+                                    <button
+                                        onClick={() => handleEditMessage(msg.messageId, msg.receiverId, msg.senderId)}>
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => handleDeleteMessage(msg.messageId, msg.receiverId, msg.senderId)}
+                                        style={{marginLeft: '10px'}}>
+                                        Delete
+                                    </button>
+                                </div>
                             )}
-                    </div>
-                ))}
-            </div>
+
+                            {msg.files.length > 0 && (
+                                <div>
+                                    <strong>Attached files:</strong>
+                                    <ul>
+                                        {msg.files.map((fileUrl, index) => {
+
+                                            return (
+                                                <li key={index}>
+                                                    <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                                                        {`File ${index + 1}`}
+                                                    </a>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </div>
+                            )}
+
+                        </div>
+
+                    ))}
+                    <div ref={messagesEndRef}/>
+                </div>)}
 
             <form className='chatInputForm' onSubmit={handleSubmit(isEditing ? handleUpdateMessage : onSubmit)}>
                 <label htmlFor="recipient">Receiver:</label>
@@ -162,4 +182,4 @@ const ChatForm: React.FC = () => {
     );
 };
 
-export {ChatForm};
+export {ChatFormComponent};

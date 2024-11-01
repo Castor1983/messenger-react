@@ -8,7 +8,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { appRoutes } from '../router/appRoutes';
 
 
-const AuthForm: React.FC = () => {
+const AuthFormComponent: React.FC = () => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm<IUserRegister>();
     const [isRegister, setIsRegister] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -97,4 +97,4 @@ const AuthForm: React.FC = () => {
         </div>);
 };
 
-export {AuthForm};
+export {AuthFormComponent};
