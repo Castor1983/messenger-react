@@ -54,6 +54,7 @@ const ChatForm: React.FC = () => {
     const handleClickMessage = (id: string) => {
         setSelectedMessageId(prevId => (prevId === id ? null : id));
     };
+
     const handleEditMessage = async (messageId: string, receiverId: string, senderId: string) => {
         const chatId: string = [senderId, receiverId].sort().join('_');
         const messageToEdit =await requestServices.chatService.getMessageById( chatId, messageId)
@@ -84,7 +85,7 @@ const ChatForm: React.FC = () => {
 
     return (
 <>
-        {token? (<div style={{maxWidth: '600px', margin: '0 auto'}}>
+        {token? (<div style={{maxWidth: '900px', margin: '0 auto'}}>
             <h1>Chat</h1>
 
             <div style={{
@@ -118,7 +119,6 @@ const ChatForm: React.FC = () => {
                             </div>
                         )}
 
-
                         {msg.files.length > 0 && (
                             <div>
                                 <strong>Attached files:</strong>
@@ -140,7 +140,7 @@ const ChatForm: React.FC = () => {
                 ))}
             </div>
 
-            <form onSubmit={handleSubmit(isEditing ? handleUpdateMessage : onSubmit)}>
+            <form className='chatInputForm' onSubmit={handleSubmit(isEditing ? handleUpdateMessage : onSubmit)}>
                 <label htmlFor="recipient">Receiver:</label>
                 <input id="receiverId" {...register("receiverId", {required: "Specify the receiver",  pattern: {
                         value: /^0\d{9}$/,

@@ -3,8 +3,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import {IUserCredentials, IUserRegister } from '../types/userType';
 import {requestServices} from '../services/api.service'
 import axios from 'axios';
-import { Navigate } from 'react-router-dom';
-import { appRoutes } from '../router/appRoutes';
+import './Form.css';
 
 
 const AuthForm: React.FC = () => {
@@ -36,28 +35,13 @@ const AuthForm: React.FC = () => {
     };
 
     return (
-        <div style={{
-                maxWidth: '400px',
-                margin: '40px auto',
-                border: '1px solid #282c34',
-                borderRadius: '4px',
-                backgroundColor: '#61dafb'
-            }}>
+        <div className= 'authFormConteiner'>
                 <h2 style={{textAlign: 'center', color: '#282c34'}}>{isRegister ? 'Register' : 'Login'}</h2>
-                <form onSubmit={handleSubmit(onSubmit)}
-                      style={{display: 'flex', flexDirection: 'column', maxWidth: '300px', margin: 'auto'}}>
+                <form className= 'authForm' onSubmit={handleSubmit(onSubmit)}>
                     {isRegister && (
                         <div>
-                            <label style={{
-                                margin: '5px 0',
-                                color: '#282c34',
-                            }}>Nickname</label>
-                            <input style={{
-                                padding: '8px',
-                                marginBottom: '10px',
-                                borderRadius: '4px',
-                                border: '1px solid #ccc'
-                            }}
+                            <label >Nickname</label>
+                            <input
                                    type="text"
                                    {...register('nickName', {
                                        required: 'This field is required',
@@ -71,16 +55,8 @@ const AuthForm: React.FC = () => {
                         </div>
                     )}
                     <div>
-                        <label style={{
-                            margin: '5px 0',
-                            color: '#282c34',
-                        }}>Phone</label>
-                        <input style={{
-                            padding: '8px',
-                            marginBottom: '10px',
-                            borderRadius: '4px',
-                            border: '1px solid #ccc'
-                        }}
+                        <label >Phone</label>
+                        <input
                                type="text"
                                {...register('phone', {
                                    required: 'This field is required',
@@ -93,16 +69,8 @@ const AuthForm: React.FC = () => {
                         {errors.phone && <p>{errors.phone.message}</p>}
                     </div>
                     <div>
-                        <label style={{
-                            margin: '5px 0',
-                            color: '#282c34',
-                        }}>Password</label>
-                        <input style={{
-                            padding: '8px',
-                            marginBottom: '10px',
-                            borderRadius: '4px',
-                            border: '1px solid #ccc'
-                        }}
+                        <label>Password</label>
+                        <input
                                type="password"
                                {...register('password', {
                                    required: 'This field is required',
@@ -116,23 +84,9 @@ const AuthForm: React.FC = () => {
                         />
                         {errors.password && <p>{errors.password.message}</p>}
                     </div>
-                    <button style={{
-                        padding: '10px',
-                        backgroundColor: '#282c34',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
-                    }} type="submit">{isRegister ? 'Register' : 'Login'}</button>
+                    <button  type="submit">{isRegister ? 'Register' : 'Login'}</button>
                 </form>
-                <button style={{
-                    padding: '10px',
-                    backgroundColor: '#282c34',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                }} onClick={() => setIsRegister(!isRegister)}>
+                <button onClick={() => setIsRegister(!isRegister)}>
                     {isRegister ? 'I already have an account' : 'Register'}
                 </button>
             </div>);
