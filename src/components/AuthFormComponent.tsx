@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {IUserCredentials, IUserRegister } from '../types/userType';
 import {requestServices} from '../services/api.service'
-import axios from 'axios';
 import './Form.css';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { appRoutes } from '../router/appRoutes';
 
 
@@ -12,6 +11,7 @@ const AuthFormComponent: React.FC = () => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm<IUserRegister>();
     const [isRegister, setIsRegister] = useState<boolean>(false);
     const navigate = useNavigate();
+    const [error, setError] = useState<string | null>(null);
 
     const onSubmit: SubmitHandler<IUserRegister | IUserCredentials > = async (data) => {
 
@@ -28,11 +28,13 @@ const AuthFormComponent: React.FC = () => {
                  navigate(appRoutes.CHAT)
 
             }
-        } catch (error) {
-            if ( axios.isAxiosError(error)) {
-                console.error("Axios error:", error.response?.data || error.message);
+            setError(null);
+        } catch (error: any) {
+
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message);
             } else {
-                console.error("Unexpected error:", error);
+                setError("An error occurred. Please try again.");
             }
         }
 
@@ -93,7 +95,7 @@ const AuthFormComponent: React.FC = () => {
                     {isRegister ? 'I already have an account' : 'Register'}
                 </button>
             </form>
-
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>);
 };
 

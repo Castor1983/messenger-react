@@ -4,7 +4,7 @@ import { requestServices } from '../services/api.service';
 import { jwtDecode } from 'jwt-decode';
 import { ITokenPayload } from '../types/tokenType';
 import {LoaderComponent} from './LoaderComponent'
-import {ChatFormInputs, createType } from '../types/messageType';
+import {ChatFormInputs } from '../types/messageType';
 import { Navigate } from 'react-router-dom';
 import { appRoutes } from '../router/appRoutes';
 import { useFirestoreCollection } from '../customHooks/useFirestoreCollection';
@@ -14,9 +14,10 @@ const ChatFormComponent: React.FC = () => {
     const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { register, handleSubmit, reset, setValue } = useForm<ChatFormInputs>();
+    const { register, handleSubmit, reset, formState: { errors }, setValue } = useForm<ChatFormInputs>();
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const [collectionName, setCollectionName] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
     const messages = useFirestoreCollection(collectionName ?? '');
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -43,10 +44,14 @@ const ChatFormComponent: React.FC = () => {
             await requestServices.chatService.sendMassage(formData)
             reset({message: '',
                 files: new DataTransfer().files});
-        } catch (error) {
-            console.error("Failed to send message:", error);
-        } finally {
-            setIsLoading(false);
+            setError(null);
+        } catch (error: any) {
+
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message);
+            } else {
+                setError("An error occurred. Please try again.");
+            }
         }
 
     };
@@ -151,15 +156,19 @@ const ChatFormComponent: React.FC = () => {
                             value: /^0\d{9}$/,
                             message: 'The phone number must start with 0 and have 10 digits',
                         }})} />
+                    {errors.receiverId && <p>{errors.receiverId.message}</p>}
 
                     <label htmlFor="message">Message:</label>
                     <textarea id="message" {...register("message", {required: "Enter a message"})}></textarea>
+                    {errors.message && <p>{errors.message.message}</p>}
                     {!isEditing && <div><label htmlFor="files">Add files:</label>
                         <input id="files" type="file" {...register("files")} multiple/>
                     </div>}
 
                     <button type="submit">{isEditing ? "Update" : "Send"}</button>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
                 </form>
+
             </div>) : (
                 <Navigate to={appRoutes.AUTH} />
             )
