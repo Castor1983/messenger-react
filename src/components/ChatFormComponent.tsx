@@ -8,6 +8,7 @@ import {ChatFormInputs, createType } from '../types/messageType';
 import { Navigate } from 'react-router-dom';
 import { appRoutes } from '../router/appRoutes';
 import { useFirestoreCollection } from '../customHooks/useFirestoreCollection';
+import { toDate } from '../utils/dateUtils';
 
 const ChatFormComponent: React.FC = () => {
     const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
@@ -23,11 +24,6 @@ const ChatFormComponent: React.FC = () => {
 
     const token = sessionStorage.getItem('token');
     const payload: ITokenPayload = token ? jwtDecode(token) : { userId: '' };
-
-    const toDate = (timestamp: createType) => {
-        const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1e6);
-        return date.toLocaleString()
-    }
 
     const onSubmit: SubmitHandler<ChatFormInputs> = async (data ) => {
         setIsLoading(true);
@@ -57,7 +53,6 @@ const ChatFormComponent: React.FC = () => {
 
     const handleClickMessage = (id: string) => {
         setSelectedMessageId(prevId => (prevId === id ? null : id));
-        console.log(selectedMessageId)
     };
 
     const handleEditMessage = async (messageId: string, receiverId: string, senderId: string) => {
