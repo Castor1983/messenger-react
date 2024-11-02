@@ -156,11 +156,11 @@ const ChatFormComponent: React.FC = () => {
                             value: /^0\d{9}$/,
                             message: 'The phone number must start with 0 and have 10 digits',
                         }})} />
-                    {errors.receiverId && <p>{errors.receiverId.message}</p>}
+                    {errors.receiverId && <p style={{color: 'red'}}>{errors.receiverId.message}</p>}
 
                     <label htmlFor="message">Message:</label>
                     <textarea id="message" {...register("message", {required: "Enter a message"})}></textarea>
-                    {errors.message && <p>{errors.message.message}</p>}
+                    {errors.message && <p style={{color: 'red'}}>{errors.message.message}</p>}
                     {!isEditing && <div><label htmlFor="files">Add files:</label>
                         <input id="files" type="file" {...register("files")} multiple/>
                     </div>}

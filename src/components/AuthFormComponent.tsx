@@ -57,7 +57,7 @@ const AuthFormComponent: React.FC = () => {
                                 },
                             })} placeholder="Your nick"
                         />
-                        {errors.nickName && <p>{errors.nickName.message}</p>}
+                        {errors.nickName && <p style={{color: 'red'}}>{errors.nickName.message}</p>}
                     </div>
                 )}
                 <div>
@@ -72,7 +72,7 @@ const AuthFormComponent: React.FC = () => {
                             }
                         })} placeholder="0951234567"
                     />
-                    {errors.phone && <p>{errors.phone.message}</p>}
+                    {errors.phone && <p style={{color: 'red'}}>{errors.phone.message}</p>}
                 </div>
                 <div>
                     <label>Password</label>
@@ -88,7 +88,7 @@ const AuthFormComponent: React.FC = () => {
                             }
                         })} placeholder="Qw13452!"
                     />
-                    {errors.password && <p>{errors.password.message}</p>}
+                    {errors.password && <p style={{color: 'red'}}>{errors.password.message}</p>}
                 </div>
                 <button type="submit">{isRegister ? 'Register' : 'Login'}</button>
                 <button onClick={() => setIsRegister(!isRegister)}>
