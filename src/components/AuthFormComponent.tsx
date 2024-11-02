@@ -34,7 +34,7 @@ const AuthFormComponent: React.FC = () => {
             if (error.response && error.response.data && error.response.data.message) {
                 setError(error.response.data.message);
             } else {
-                setError("An error occurred. Please try again.");
+                setError(error.message);
             }
         }
 
