@@ -2,7 +2,7 @@ import axios, {AxiosInstance, AxiosResponse } from "axios";
 
 import { baseUrl, urls } from "../constants/urls";
 import {IUserCredentials, IUserRegister} from "../types/userType";
-import {ChatFormInputs, IMessageResponse, IUpdateMessage} from "../types/messageType";
+import {IMessageResponse, IUpdateMessage} from "../types/messageType";
 import { IToken } from "../types/tokenType";
 
  export const axiosInstance: AxiosInstance = axios.create({
