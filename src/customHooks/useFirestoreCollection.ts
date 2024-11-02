@@ -1,4 +1,4 @@
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import {useEffect, useState } from "react";
 import { firestore } from "../firebase";
 import { IMessageResponse } from "../types/messageType";
