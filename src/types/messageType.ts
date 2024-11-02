@@ -13,7 +13,7 @@ export type createType = {
     nanoseconds: number
 }
 export interface IMessageResponse {
-    messageId: string,
+    id: string,
     senderId: string,
     receiverId: string,
     message: string,

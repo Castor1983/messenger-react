@@ -27,7 +27,7 @@ const ChatFormComponent: React.FC = () => {
     const toDate = (timestamp: createType) => {
         const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1e6);
         return date.toLocaleString()
-}
+    }
 
     const onSubmit: SubmitHandler<ChatFormInputs> = async (data ) => {
         setIsLoading(true);
@@ -40,23 +40,24 @@ const ChatFormComponent: React.FC = () => {
                 formData.append("files", file);
             });
         }
-            const chatId: string = [payload.userId, data.receiverId].sort().join('_');
+        const chatId: string = [payload.userId, data.receiverId].sort().join('_');
         setCollectionName(`chats/${chatId}/messages`);
 
-            try {
-               await requestServices.chatService.sendMassage(formData)
-                reset({message: '',
+        try {
+            await requestServices.chatService.sendMassage(formData)
+            reset({message: '',
                 files: new DataTransfer().files});
-            } catch (error) {
-                console.error("Failed to send message:", error);
-            } finally {
-                setIsLoading(false);
-            }
+        } catch (error) {
+            console.error("Failed to send message:", error);
+        } finally {
+            setIsLoading(false);
+        }
 
     };
 
     const handleClickMessage = (id: string) => {
         setSelectedMessageId(prevId => (prevId === id ? null : id));
+        console.log(selectedMessageId)
     };
 
     const handleEditMessage = async (messageId: string, receiverId: string, senderId: string) => {
@@ -88,86 +89,86 @@ const ChatFormComponent: React.FC = () => {
     };
 
     return (
-<>
-        {token? (<div style={{maxWidth: '900px', margin: '0 auto'}}>
-            <h1>Chat</h1>
-            {isLoading ? (
-                <LoaderComponent/>
-            ) : (
-                <div style={{
-                    border: '1px solid #ccc',
-                    padding: '10px',
-                    height: '300px',
-                    overflowY: 'scroll',
-                    marginBottom: '20px'
-                }}>
-                    {messages.map((msg) => (
-                        <div key={msg.messageId} onClick={() => handleClickMessage(msg.messageId)} style={{
-                            textAlign: msg.senderId === payload.userId ? 'right' : 'left',
-                            margin: '5px 0',
-                            color: msg.senderId === payload.userId ? '#007bff' : '#28a745',
-                        }}>
-                            <strong>{msg.senderId}:</strong>
-                            <p>{msg.message}</p>
-                            <p>{toDate(msg.create)}</p>
+        <>
+            {token? (<div style={{maxWidth: '900px', margin: '0 auto'}}>
+                <h1>Chat</h1>
+                {isLoading ? (
+                    <LoaderComponent/>
+                ) : (
+                    <div style={{
+                        border: '1px solid #ccc',
+                        padding: '10px',
+                        height: '300px',
+                        overflowY: 'scroll',
+                        marginBottom: '20px'
+                    }}>
+                        {messages.map((msg) => (
+                            <div key={msg.id} onClick={() => handleClickMessage(msg.id)} style={{
+                                textAlign: msg.senderId === payload.userId ? 'right' : 'left',
+                                margin: '5px 0',
+                                color: msg.senderId === payload.userId ? '#007bff' : '#28a745',
+                            }}>
+                                <strong>{msg.senderId}:</strong>
+                                <p>{msg.message}</p>
+                                <p>{toDate(msg.create)}</p>
 
-                            {msg.senderId === payload.userId && selectedMessageId === msg.messageId && (
-                                <div>
-                                    <button
-                                        onClick={() => handleEditMessage(msg.messageId, msg.receiverId, msg.senderId)}>
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={() => handleDeleteMessage(msg.messageId, msg.receiverId, msg.senderId)}
-                                        style={{marginLeft: '10px'}}>
-                                        Delete
-                                    </button>
-                                </div>
-                            )}
+                                {msg.senderId === payload.userId && selectedMessageId === msg.id && (
+                                    <div>
+                                        <button
+                                            onClick={() => handleEditMessage(msg.id, msg.receiverId, msg.senderId)}>
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteMessage(msg.id, msg.receiverId, msg.senderId)}
+                                            style={{marginLeft: '10px'}}>
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
 
-                            {msg.files.length > 0 && (
-                                <div>
-                                    <strong>Attached files:</strong>
-                                    <ul>
-                                        {msg.files.map((fileUrl, index) => {
+                                {msg.files.length > 0 && (
+                                    <div>
+                                        <strong>Attached files:</strong>
+                                        <ul>
+                                            {msg.files.map((fileUrl, index) => {
 
-                                            return (
-                                                <li key={index}>
-                                                    <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-                                                        {`File ${index + 1}`}
-                                                    </a>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </div>
-                            )}
+                                                return (
+                                                    <li key={index}>
+                                                        <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                                                            {`File ${index + 1}`}
+                                                        </a>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                )}
 
-                        </div>
+                            </div>
 
-                    ))}
-                    <div ref={messagesEndRef}/>
-                </div>)}
+                        ))}
+                        <div ref={messagesEndRef}/>
+                    </div>)}
 
-            <form className='chatInputForm' onSubmit={handleSubmit(isEditing ? handleUpdateMessage : onSubmit)}>
-                <label htmlFor="recipient">Receiver:</label>
-                <input id="receiverId" {...register("receiverId", {required: "Specify the receiver",  pattern: {
-                        value: /^0\d{9}$/,
-                        message: 'The phone number must start with 0 and have 10 digits',
-                    }})} />
+                <form className='chatInputForm' onSubmit={handleSubmit(isEditing ? handleUpdateMessage : onSubmit)}>
+                    <label htmlFor="recipient">Receiver:</label>
+                    <input id="receiverId" {...register("receiverId", {required: "Specify the receiver",  pattern: {
+                            value: /^0\d{9}$/,
+                            message: 'The phone number must start with 0 and have 10 digits',
+                        }})} />
 
-                <label htmlFor="message">Message:</label>
-                <textarea id="message" {...register("message", {required: "Enter a message"})}></textarea>
-                {!isEditing && <div><label htmlFor="files">Add files:</label>
-                    <input id="files" type="file" {...register("files")} multiple/>
-                </div>}
+                    <label htmlFor="message">Message:</label>
+                    <textarea id="message" {...register("message", {required: "Enter a message"})}></textarea>
+                    {!isEditing && <div><label htmlFor="files">Add files:</label>
+                        <input id="files" type="file" {...register("files")} multiple/>
+                    </div>}
 
-                <button type="submit">{isEditing ? "Update" : "Send"}</button>
-            </form>
-        </div>) : (
+                    <button type="submit">{isEditing ? "Update" : "Send"}</button>
+                </form>
+            </div>) : (
                 <Navigate to={appRoutes.AUTH} />
             )
-} </>
+            } </>
     );
 };
 

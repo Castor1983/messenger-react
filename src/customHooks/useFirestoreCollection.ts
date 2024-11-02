@@ -15,7 +15,11 @@ const useFirestoreCollection = (collectionName: string) => {
         const unsubscribe = onSnapshot(colRef, (snapshot) => {
             const docs = snapshot.docs.map(doc => ({
                 id: doc.id,
-                ...doc.data() as IMessageResponse
+                senderId: doc.data().senderId,
+                receiverId: doc.data().receiverId,
+                message: doc.data().message,
+                create: doc.data().create,
+                files: doc.data().files || []
             }));
 
             setData(docs);
