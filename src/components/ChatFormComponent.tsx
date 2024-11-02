@@ -4,19 +4,19 @@ import { requestServices } from '../services/api.service';
 import { jwtDecode } from 'jwt-decode';
 import { ITokenPayload } from '../types/tokenType';
 import {LoaderComponent} from './LoaderComponent'
-import {ChatFormInputs, IMessageResponse, IUpdateMessage, createType } from '../types/messageType';
+import {ChatFormInputs, createType } from '../types/messageType';
 import { Navigate } from 'react-router-dom';
 import { appRoutes } from '../router/appRoutes';
-
+import { useFirestoreCollection } from '../customHooks/useFirestoreCollection';
 
 const ChatFormComponent: React.FC = () => {
-    const [messages, setMessages] = useState<IMessageResponse[]>([]);
     const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { register, handleSubmit, reset, setValue } = useForm<ChatFormInputs>();
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
+    const [collectionName, setCollectionName] = useState<string | null>(null);
+    const messages = useFirestoreCollection(collectionName ?? '');
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
@@ -41,17 +41,10 @@ const ChatFormComponent: React.FC = () => {
             });
         }
             const chatId: string = [payload.userId, data.receiverId].sort().join('_');
+        setCollectionName(`chats/${chatId}/messages`);
 
             try {
                await requestServices.chatService.sendMassage(formData)
-               const response = await requestServices.chatService.getMessagesByChatId(chatId)
-                const sortedMessages = [...response].sort((a, b) => {
-                    const dateA = new Date(a.create.seconds * 1000 + a.create.nanoseconds / 1e6);
-                    const dateB = new Date(b.create.seconds * 1000 + b.create.nanoseconds / 1e6);
-                    return dateA.getTime() - dateB.getTime();
-                });
-                setMessages(sortedMessages)
-
                 reset({message: '',
                 files: new DataTransfer().files});
             } catch (error) {
@@ -81,8 +74,6 @@ const ChatFormComponent: React.FC = () => {
         const { files, ...dataWithoutFiles } = data;
         const chatId: string = [payload.userId, data.receiverId].sort().join('_');
         await requestServices.chatService.editMassage(dataWithoutFiles, isEditing as string, chatId)
-        const response = await requestServices.chatService.getMessagesByChatId(chatId)
-        setMessages(response)
         reset();
         setIsEditing(null);
         setIsLoading(false);
@@ -93,8 +84,6 @@ const ChatFormComponent: React.FC = () => {
         const chatId: string = [senderId, receiverId].sort().join('_');
 
         await requestServices.chatService.deleteMassage(messageId, chatId)
-        const response = await requestServices.chatService.getMessagesByChatId(chatId)
-        setMessages(response)
         setIsLoading(false);
     };
 
