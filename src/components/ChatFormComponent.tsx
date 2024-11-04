@@ -45,6 +45,7 @@ const ChatFormComponent: React.FC = () => {
             reset({message: '',
                 files: new DataTransfer().files});
             setError(null);
+            setIsLoading(false);
         } catch (error: any) {
 
             if (error.response && error.response.data && error.response.data.message) {
