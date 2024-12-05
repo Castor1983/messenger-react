@@ -7,13 +7,11 @@ export const authService = {
 
   register: async (data: IUserRegister): Promise<void> => {
     await axiosInstance.post<void>(urls.auth.register, data);
-
   },
 
   login: async (data: IUserCredentials): Promise<IToken> => {
     const response = await axiosInstance.post<IToken>(urls.auth.login, data);
     return response.data;
-
   },
 
   logout: async (token: string): Promise<void> => {
@@ -21,7 +19,5 @@ export const authService = {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'multipart/form-data',
     }, });
-
   },
-
 };
