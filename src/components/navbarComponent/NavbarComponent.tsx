@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate } from 'react-router-dom';
 
 import css from './Navbar.module.css';
 import { appRoutes } from '../../router/appRoutes';
@@ -7,6 +7,14 @@ import { authService } from '../../services/auth.service';
 
 const NavbarComponent = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+
+  const visibleAuth = '/auth'
+  const visibleChat = '/chat'
+
+  const isAuthVisible = visibleAuth.includes(location.pathname);
+  const isChatVisible = visibleChat.includes(location.pathname);
   const logout = async () => {
     const token = sessionStorage.getItem('token');
     if(token) {
@@ -21,9 +29,9 @@ const NavbarComponent = () => {
       <div className={ css.navbarContainer }>
         <h1 className={ css.navbarLogo }>Chat-messenger</h1>
         <ul className={ css.navbarMenu }>
-          <li className={ css.navbarItem }><a href="auth">Register/login</a></li>
-          <li className={ css.navbarItem }><a href="chat">Chat</a></li>
-          <li className={ css.navbarItem } onClick={ () => logout() }><a>Logout</a></li>
+          <li className={css.navbarItem}><a href="auth">Register/login</a></li>
+          {isAuthVisible && (<li className={css.navbarItem}><a href="chat">Chat</a></li>)}
+          {isChatVisible && (<li className={css.navbarItem} onClick={() => logout()}><a>Logout</a></li>)}
         </ul>
       </div>
     </nav>
