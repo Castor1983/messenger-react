@@ -3,25 +3,25 @@
     padding: 20px;
 }
 
-.navbar-container {
+.navbarContainer {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.navbar-logo {
+.navbarLogo {
     color: #61dafb;
     font-size: 24px;
     text-decoration: none;
 }
 
-.navbar-menu {
+.navbarMenu {
     list-style: none;
     display: flex;
     gap: 20px;
 }
 
-.navbar-item a {
+.navbarItem a {
     cursor: pointer;
     color: white;
     text-decoration: none;
@@ -29,6 +29,6 @@
     transition: color 0.3s;
 }
 
-.navbar-item a:hover {
+.navbarItem a:hover {
     color: #61dafb;
 }

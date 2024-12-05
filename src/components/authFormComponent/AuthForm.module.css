@@ -1,0 +1,25 @@
+h2 {
+    text-align: center;
+    color: #282c34;
+}
+.authFormContainer {
+    display: flex;
+    align-items:  center;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 40px auto;
+    border: 1px solid #282c34;
+    border-radius: 4px;
+    background-color: #61dafb;
+
+}
+.authForm {
+    display: flex;
+    align-items:  center;
+    flex-direction: column;
+    max-width: 300px;
+    margin: 10px
+}
+
+
+

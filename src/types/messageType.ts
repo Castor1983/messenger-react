@@ -6,11 +6,6 @@ export interface IMessage {
     message: string,
     files: File[]
 
-
-}
-export type createType = {
-    seconds: number,
-    nanoseconds: number
 }
 export interface IMessageResponse {
     id: string,
@@ -20,17 +15,15 @@ export interface IMessageResponse {
     create: createType,
     files: string[]
 
-
 }
-
 export interface IMessageFormData {
     senderId: FormData,
     receiverId: FormData,
     message: FormData,
     files?: FormData
 
-
 }
+
 export interface IUpdateMessage  {
     receiverId: string
     message: string,
@@ -46,3 +39,7 @@ export interface ChatFormInputs {
     files:FileList;
 }
 
+export type createType = {
+    seconds: number,
+    nanoseconds: number
+}
