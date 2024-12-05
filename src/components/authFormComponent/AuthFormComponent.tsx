@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { SubmitHandler,useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -29,7 +28,6 @@ const AuthFormComponent: React.FC = () => {
         reset();
         sessionStorage.setItem('token', token.accessToken);
         navigate(appRoutes.CHAT);
-
       }
       setError(null);
     } catch (error: any) {
@@ -40,7 +38,6 @@ const AuthFormComponent: React.FC = () => {
         setError(error.message);
       }
     }
-
   };
 
   return (

@@ -1,4 +1,3 @@
-
 import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useRef, useState } from 'react';
 import { SubmitHandler,useForm } from 'react-hook-form';
@@ -59,7 +58,6 @@ const ChatFormComponent: React.FC = () => {
         setError('An error occurred. Please try again.');
       }
     }
-
   };
 
   const handleClickMessage = (id: string) => {
